@@ -18,7 +18,7 @@ $(shell if [ ! -f $(VH) ]; then mv $(VH).n $(VH); elif cmp -s $(VH).n $(VH); the
 # platform independent defines
 DEFINES= -DXPLM200 -DXPLM210 -DXPLM300 -DXPLM301
 
-SOURCES_CPP=plugin.cpp log_msg.cpp
+SOURCES_CPP=$(wildcard src/*.cpp) log_msg.cpp
 
 # the c++ standard to use
 CXXSTD=-std=c++20
