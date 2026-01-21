@@ -1,0 +1,30 @@
+name: Build macOS Plugin
+description: Compile the macOS plugin binary and upload the build artifact.
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Get xplib
+      shell: bash
+      run: |
+        git clone https://github.com/hotbso/xplib.git ../xplib
+
+    - name: Compile Makefile.mac64
+      shell: bash
+      run: |
+        set -x
+        TAG=${GITHUB_REF##*/}
+        if [ ! -z "$TAG" ]; then
+          echo "VERSION=$TAG" > version.mak
+        fi
+        make -f Makefile.mac64
+
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-mac
+        path: |
+          build/mac.xpl

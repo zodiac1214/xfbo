@@ -1,0 +1,37 @@
+name: Build Windows Plugin
+description: Build Windows plugin, generate whitelist checksums, and push to release/beta/build-test branch.
+runs:
+  using: composite
+  steps:
+    - uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        install: >-
+          mingw-w64-x86_64-gcc
+          make
+          git
+
+    - uses: actions/checkout@v3
+
+    - name: Get xplib
+      shell: bash
+      run: |
+        git clone https://github.com/hotbso/xplib.git ../xplib
+
+    - name: Build Windows binaries
+      shell: msys2 {0}
+      run: |
+        TAG=${GITHUB_REF##*/}
+        if [ ! -z "$TAG" ]; then
+          echo "VERSION=$TAG" > version.mak
+        fi
+        make -f Makefile.mgw64
+        ls -lR ./build
+
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-windows
+        path: |
+          build/win.xpl

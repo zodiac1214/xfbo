@@ -1,0 +1,84 @@
+OBJDIR=./build/mac
+
+include Makefile.common
+
+TARGET=build/mac.xpl
+TARGET_arm=$(OBJDIR)/mac.xpl_arm
+TARGET_x86=$(OBJDIR)/mac.xpl_x86
+
+HEADERS=$(wildcard *.h)
+OBJECTS_arm:=$(addprefix $(OBJDIR)/, $(SOURCES_CPP:.cpp=.o_arm)) $(addprefix $(OBJDIR)/, $(SOURCES_C:.c=.o_arm))
+OBJECTS_x86=$(OBJECTS_arm:.o_arm=.o_x86)
+
+# all sources to the dep files
+DEPFILES=$(SOURCES_CPP:%.cpp=$(DEPDIR)/%.d) $(SOURCES_C:%.c=$(DEPDIR)/%.d)
+
+DEPDIR := $(OBJDIR)/.deps
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.d
+
+# if we run this script on Linux it's osxcross
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+    CCx=clang -target x86_64-apple-macos13
+    CCa=clang -target arm64-apple-macos13
+
+    CXXx=clang++ -target x86_64-apple-macos13
+    CXXa=clang++ -target arm64-apple-macos13
+    AR=ar
+else
+    PATH:=/osxcross/target/bin:$(PATH)
+    CCx=o64-clang -mmacosx-version-min=13.0
+    CCa=oa64-clang -mmacosx-version-min=13.0
+
+    CXXx=o64-clang++ -mmacosx-version-min=13.0
+    CXXa=oa64-clang++ -mmacosx-version-min=13.0
+    AR=llvm-ar
+endif
+
+CFLAGS+=$(DEFINES) $(OPT) -Wall $(INCLUDES) $(DEBUG) \
+    -DAPL=1 -fPIC -fno-stack-protector -fvisibility=hidden
+CXXFLAGS=$(CXXSTD) $(CFLAGS)
+
+LNFLAGS+=-dynamiclib -shared -rdynamic -fvisibility=hidden -Wl,-exported_symbols_list -Wl,linkscript.mac
+
+# https://pewpewthespells.com/blog/static_and_dynamic_libraries.html
+LIBS= -F $(SDK)/Libraries/Mac -framework XPLM -framework OpenGL -lcurl -lz
+
+#test:
+#    $(foreach var,$(.VARIABLES),$(info $(var) = $($(var))))
+
+all: $(TARGET)
+    $(shell [ -d $(OBJDIR) ] || mkdir -p $(OBJDIR))
+
+$(OBJDIR)/%.o_arm: %.cpp version.mak
+	$(CXXa) $(CXXFLAGS) -o $@ -c $<
+
+$(OBJDIR)/%.o_x86: %.cpp  version.mak
+	$(CXXx) $(CXXFLAGS) -o $@ -c $<
+
+$(OBJDIR)/%.o_arm: %.c version.mak
+	$(CCa) $(CFLAGS) -o $@ -c $<
+
+$(OBJDIR)/%.o_x86: %.c  version.mak
+	$(CCx) $(CFLAGS) -o $@ -c $<
+
+$(TARGET_arm): $(OBJECTS_arm)
+	$(CXXa) -o $@ $(OBJECTS_arm) $(LNFLAGS) $(LIBS)
+
+$(TARGET_x86): $(OBJECTS_x86)
+	$(CXXx) -o $@ $(OBJECTS_x86) $(LNFLAGS) $(LIBS)
+
+$(TARGET): $(TARGET_arm) $(TARGET_x86)
+	lipo -create -output $@ $(TARGET_arm) $(TARGET_x86)
+	if [ -d "/Volumes/storage/X-Plane 12/Resources/plugins" ]; then \
+        mkdir -p "/Volumes/storage/X-Plane 12/Resources/plugins/${PROJECT_NAME}/mac_x64"; \
+        cp -p build/mac.xpl /Volumes/storage/X-Plane\ 12/Resources/plugins/${PROJECT_NAME}/mac_x64/${PROJECT_NAME}.xpl; \
+    fi
+
+$(DEPDIR): ; @mkdir -p $@
+
+$(DEPFILES):
+include $(wildcard $(DEPFILES))
+
+clean:
+	rm -f $(TARGET) $(OBJDIR)/*.o_* $(OBJDIR)/*.xpl_*
