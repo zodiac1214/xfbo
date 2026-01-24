@@ -2,6 +2,8 @@ OBJDIR=./build/lin
 
 include Makefile.common
 
+INCLUDES+=-IUltralight-SDK-1.4.0-Linux/include
+
 TARGET=build/lin.xpl
 
 HEADERS=$(wildcard *.h)
@@ -28,7 +30,9 @@ COMPILE.cpp = $(CXX) $(CXXFLAGS) $(DEPFLAGS) -c
 COMPILE.c = $(CC) $(CFLAGS) $(DEPFLAGS) -c
 
 LDFLAGS=-shared -rdynamic -nodefaultlibs -undefined_warning
-LIBS=-lcurl -lz -lOpenGL
+LIBS=-lcurl -lz -lOpenGL \
+	-lUltralight -lUltralightCore -lWebCore -lAppCore \
+	-LUltralight-SDK-1.4.0-Linux/bin
 
 $(OBJDIR)/%.o: %.cpp $(DEPDIR)/%.d version.mak | $(DEPDIR)/src $(OBJDIR)/src
 	$(COMPILE.cpp) -o $@  $<

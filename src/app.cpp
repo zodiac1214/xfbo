@@ -1,4 +1,8 @@
 #include "app.h"
+#include <Ultralight/Ultralight.h>
+#include <JavaScriptCore/JavaScript.h>
+
+using namespace ultralight;
 
 App &App::instance()
 {
@@ -42,6 +46,11 @@ int App::initialize(char *out_name, char *out_sig, char *out_desc)
     std::filesystem::create_directory(App::instance().getOutputDir());
 
     LogMsg("XPluginStart done, xp_dir: '%s'", App::instance().getXpDir().c_str());
+
+    // intialize Ultralight here
+    Config config;
+    config.user_stylesheet = "body { background-color: #202020; color: #E0E0E0; }";
+    Platform::instance().set_config(config);
 
     return 1;
 }
