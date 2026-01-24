@@ -1,8 +1,6 @@
 //
-//    X Airline Snow: show accumulated snow in X-Plane's world
 //
-//    Copyright (C) 2025  Zodiac1214
-//    Copyright (C) 2025  Holger Teutsch
+//    Copyright (C) 2026  Zodiac1214
 //
 //    This library is free software; you can redistribute it and/or
 //    modify it under the terms of the GNU Lesser General Public
@@ -20,23 +18,32 @@
 //    USA
 //
 
-#ifndef _XA_SNOW_H_
-#define _XA_SNOW_H_
+#pragma once
 
 #include <cstdint>
 #include <string>
 #include <tuple>
 #include <numbers>
 #include <memory>
+#include <cstring>
+#include <cstdio>
+#include <fstream>
+#include <filesystem>
+#include <array>
+#include <thread>
 
 #include "XPLMDataAccess.h"
 #include "XPLMScenery.h"
+#include "XPLMPlugin.h"
+#include "XPLMProcessing.h"
+#include "XPLMUtilities.h"
+#include "XPLMMenus.h"
 
 #include "log_msg.h"
 #include "http_get.h"
 
+#include "app.h"
+
 extern std::string xp_dir;
 extern std::string plugin_dir;
 extern std::string output_dir;
-
-#endif

@@ -48,7 +48,7 @@ LIBS= -F $(SDK)/Libraries/Mac -framework XPLM -framework OpenGL -lcurl -lz
 #    $(foreach var,$(.VARIABLES),$(info $(var) = $($(var))))
 
 all: $(TARGET)
-    $(shell [ -d $(OBJDIR) ] || mkdir -p $(OBJDIR))
+    $(shell [ -d $(OBJDIR)/src ] || mkdir -p $(OBJDIR)/src)
 
 $(OBJDIR)/%.o_arm: %.cpp version.mak
 	$(CXXa) $(CXXFLAGS) -o $@ -c $<
