@@ -30,10 +30,10 @@ COMPILE.c = $(CC) $(CFLAGS) $(DEPFLAGS) -c
 LDFLAGS=-shared -static-libgcc -static -lpthread
 LIBS=-L$(SDK)/Libraries/Win -lXPLM_64 -lwinhttp -lopengl32 -lz
 
-$(OBJDIR)/%.o: %.cpp $(DEPDIR)/%.d version.mak | $(DEPDIR)
+$(OBJDIR)/%.o: %.cpp $(DEPDIR)/%.d version.mak | $(DEPDIR)/src $(OBJDIR)/src
 	$(COMPILE.cpp) -o $@  $<
 
-$(OBJDIR)/%.o: %.c $(DEPDIR)/%.d version.mak | $(DEPDIR)
+$(OBJDIR)/%.o: %.c $(DEPDIR)/%.d version.mak | $(DEPDIR)/src $(OBJDIR)/src
 	$(COMPILE.c) -o $@  $<
 
 all: $(TARGET)
@@ -41,7 +41,12 @@ all: $(TARGET)
 $(TARGET): $(OBJECTS)
 	$(LD) -o $(TARGET) $(OBJECTS) $(LIBS) $(LDFLAGS)
 
-$(DEPDIR): ; @mkdir -p $@
+$(DEPDIR)/src:
+	@mkdir -p $@
+
+$(OBJDIR)/src:
+	@mkdir -p $@
+
 
 $(DEPFILES):
 include $(wildcard $(DEPFILES))

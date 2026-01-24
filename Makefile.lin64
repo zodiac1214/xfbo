@@ -30,10 +30,10 @@ COMPILE.c = $(CC) $(CFLAGS) $(DEPFLAGS) -c
 LDFLAGS=-shared -rdynamic -nodefaultlibs -undefined_warning
 LIBS=-lcurl -lz -lOpenGL
 
-$(OBJDIR)/%.o: %.cpp $(DEPDIR)/%.d version.mak | $(DEPDIR)
+$(OBJDIR)/%.o: %.cpp $(DEPDIR)/%.d version.mak | $(DEPDIR)/src $(OBJDIR)/src
 	$(COMPILE.cpp) -o $@  $<
 
-$(OBJDIR)/%.o: %.c $(DEPDIR)/%.d version.mak | $(DEPDIR)
+$(OBJDIR)/%.o: %.c $(DEPDIR)/%.d version.mak | $(DEPDIR)/src $(OBJDIR)/src
 	$(COMPILE.c) -o $@  $<
 
 all: $(TARGET)
@@ -43,7 +43,11 @@ XPL_DIR=/e/X-Plane-12-test
 $(TARGET): $(OBJECTS)
 	$(LD) -o $(TARGET) $(LDFLAGS) $(OBJECTS) $(LIBS)
 
-$(DEPDIR): ; @mkdir -p $@
+$(DEPDIR)/src:
+	@mkdir -p $@
+
+$(OBJDIR)/src:
+	@mkdir -p $@
 
 $(DEPFILES):
 include $(wildcard $(DEPFILES))
