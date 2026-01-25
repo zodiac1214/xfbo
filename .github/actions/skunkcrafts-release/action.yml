@@ -18,15 +18,32 @@ runs:
     - name: Organize Build Artifacts
       shell: bash
       run: |
-        mkdir -p ./build/${{ inputs.project-name }}
-        mkdir -p ./build/${{ inputs.project-name }}/win_x64
-        mkdir -p ./build/${{ inputs.project-name }}/lin_x64
-        mkdir -p ./build/${{ inputs.project-name }}/mac_x64
-        cp ./download/*/*.xpl ./build/.
-        mv ./build/mac.xpl ./build/${{ inputs.project-name }}/mac_x64/${{ inputs.project-name }}.xpl
-        mv ./build/lin.xpl ./build/${{ inputs.project-name }}/lin_x64/${{ inputs.project-name }}.xpl
-        mv ./build/win.xpl ./build/${{ inputs.project-name }}/win_x64/${{ inputs.project-name }}.xpl
-        ls -lR ./build/${{ inputs.project-name }}
+        set -x
+        PROJECT=${{ inputs.project-name }}
+
+        # Create directory structure
+        mkdir -p ./build/${PROJECT}/win_x64/resources
+        mkdir -p ./build/${PROJECT}/lin_x64/resources
+        mkdir -p ./build/${PROJECT}/mac_x64/resources
+
+        # Copy plugin binaries
+        cp ./download/build-windows/build/win.xpl ./build/${PROJECT}/win_x64/${PROJECT}.xpl
+        cp ./download/build-linux/build/lin.xpl ./build/${PROJECT}/lin_x64/${PROJECT}.xpl
+        cp ./download/build-mac/build/mac.xpl ./build/${PROJECT}/mac_x64/${PROJECT}.xpl
+
+        # Copy Windows Ultralight runtime
+        cp ./download/build-windows/Ultralight-SDK-1.4.0-Win64/bin/*.dll ./build/${PROJECT}/win_x64/
+        cp ./download/build-windows/Ultralight-SDK-1.4.0-Win64/resources/* ./build/${PROJECT}/win_x64/resources/
+
+        # Copy Linux Ultralight runtime
+        cp ./download/build-linux/Ultralight-SDK-1.4.0-Linux/bin/*.so ./build/${PROJECT}/lin_x64/
+        cp ./download/build-linux/Ultralight-SDK-1.4.0-Linux/resources/* ./build/${PROJECT}/lin_x64/resources/
+
+        # Copy Mac Ultralight runtime (universal dylibs)
+        cp ./download/build-mac/build/ultralight-libs/*.dylib ./build/${PROJECT}/mac_x64/
+        cp ./download/build-mac/Ultralight-SDK-1.4.0-Mac-Arm64/resources/* ./build/${PROJECT}/mac_x64/resources/
+
+        ls -lR ./build/${PROJECT}
 
     - name: Copy Extra Files (optional)
       shell: bash

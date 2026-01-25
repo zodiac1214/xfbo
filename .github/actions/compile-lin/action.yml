@@ -28,3 +28,5 @@ runs:
         name: build-linux
         path: |
           build/lin.xpl
+          Ultralight-SDK-1.4.0-Linux/bin/*.so
+          Ultralight-SDK-1.4.0-Linux/resources/*
