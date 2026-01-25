@@ -1,8 +1,4 @@
 #include "app.h"
-#include <Ultralight/Ultralight.h>
-#include <JavaScriptCore/JavaScript.h>
-
-using namespace ultralight;
 
 App &App::instance()
 {
@@ -16,6 +12,7 @@ App::App()
     strcpy(name, (app_name + " - " VERSION_SHORT " - ").c_str());
     strcpy(signature, "com.github.zodiac1214.xfbo");
     strcpy(description, "x FBO with AI");
+    // renderer_ = Renderer::Create();
 }
 
 App::~App()
@@ -51,6 +48,33 @@ int App::initialize(char *out_name, char *out_sig, char *out_desc)
     Config config;
     config.user_stylesheet = "body { background-color: #202020; color: #E0E0E0; }";
     Platform::instance().set_config(config);
+    Platform::instance().set_font_loader(GetPlatformFontLoader());
+    Platform::instance().set_file_system(GetPlatformFileSystem("."));
+    Platform::instance().set_logger(GetDefaultLogger("ultralight.log"));
+
+    RefPtr<Renderer> renderer = Renderer::Create();
+
+    RefPtr<View> view = renderer->CreateView(800, 600, ViewConfig(), nullptr);
+
+    // multiple line of js code to test
+    String scripts = R"(
+        function add(a, b) {
+            return a + b;
+        }
+        add(5, 7);
+    )";
+
+    String result = view->EvaluateScript(scripts);
+    LogMsg("FFFFFFF!!!!!!!!!!%s", result.utf8().data());
+
+    scripts = R"(
+        function add(a, b) {
+            return a + b;
+        }
+        add(5, "7");
+    )";
+    result = view->EvaluateScript(scripts);
+    LogMsg("FFFFFFF!!!!!!!!!!%s", result.utf8().data());
 
     return 1;
 }
