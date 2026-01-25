@@ -22,7 +22,9 @@ echo #define VERSION_SHORT "%VERSION%" >> version.h
 type version.h
 
 REM Compiler flags
-set CXXFLAGS=/std:c++20 /O2 /EHsc /MD /W3
+REM /Zc:preprocessor - Enable conforming preprocessor (required for __VA_OPT__)
+REM /D__attribute__(x)= - Define away GCC's __attribute__ syntax
+set CXXFLAGS=/std:c++20 /O2 /EHsc /MD /W3 /Zc:preprocessor /D__attribute__(x)=
 set DEFINES=/DXPLM200 /DXPLM210 /DXPLM300 /DXPLM301 /DWINDOWS /DWIN32 /DIBM=1
 set INCLUDES=/I. /I..\xplib /I%SDK%\CHeaders\XPLM /IUltralight-SDK-1.4.0-Win64\include
 
