@@ -9,10 +9,22 @@ runs:
         update: true
         install: >-
           mingw-w64-x86_64-gcc
+          mingw-w64-x86_64-tools-git
           make
           git
 
     - uses: actions/checkout@v3
+
+    - name: Generate MinGW import libraries from Ultralight DLLs
+      shell: msys2 {0}
+      run: |
+        cd Ultralight-SDK-1.4.0-Win64/bin
+        for dll in Ultralight.dll UltralightCore.dll WebCore.dll AppCore.dll; do
+          name="${dll%.dll}"
+          gendef "$dll"
+          dlltool -d "${name}.def" -l "lib${name}.a" -D "$dll"
+        done
+        ls -la *.a
 
     - name: Get xplib
       shell: bash
