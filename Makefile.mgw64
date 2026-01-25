@@ -32,7 +32,7 @@ COMPILE.c = $(CC) $(CFLAGS) $(DEPFLAGS) -c
 LDFLAGS=-shared -static-libgcc -static -lpthread
 LIBS=-L$(SDK)/Libraries/Win -lXPLM_64 -lwinhttp -lopengl32 -lz \
 	-LUltralight-SDK-1.4.0-Win64/lib \
-	-lUltralight -lUltralightCore -lWebCore -lAppCore
+	-l:Ultralight.lib -l:UltralightCore.lib -l:WebCore.lib -l:AppCore.lib
 	
 
 $(OBJDIR)/%.o: %.cpp $(DEPDIR)/%.d version.mak | $(DEPDIR)/src $(OBJDIR)/src
