@@ -22,9 +22,10 @@ runs:
         PROJECT=${{ inputs.project-name }}
 
         # Create directory structure
-        mkdir -p ./build/${PROJECT}/win_x64/resources
-        mkdir -p ./build/${PROJECT}/lin_x64/resources
-        mkdir -p ./build/${PROJECT}/mac_x64/resources
+        mkdir -p ./build/${PROJECT}/resources
+
+        # Copy Resource
+        cp ./download/build-windows/Ultralight-SDK-1.4.0-Win64/resources/* ./build/${PROJECT}/resources/
 
         # Copy plugin binaries
         cp ./download/build-windows/build/win.xpl ./build/${PROJECT}/win_x64/${PROJECT}.xpl
@@ -32,16 +33,13 @@ runs:
         cp ./download/build-mac/build/mac.xpl ./build/${PROJECT}/mac_x64/${PROJECT}.xpl
 
         # Copy Windows Ultralight runtime
-        cp ./download/build-windows/Ultralight-SDK-1.4.0-Win64/bin/*.dll ./build/${PROJECT}/win_x64/
-        cp ./download/build-windows/Ultralight-SDK-1.4.0-Win64/resources/* ./build/${PROJECT}/win_x64/resources/
+        cp ./download/build-windows/Ultralight-SDK-1.4.0-Win64/bin/*.dll ./build/${PROJECT}/win_x64/lib/
 
         # Copy Linux Ultralight runtime
-        cp ./download/build-linux/Ultralight-SDK-1.4.0-Linux/bin/*.so ./build/${PROJECT}/lin_x64/
-        cp ./download/build-linux/Ultralight-SDK-1.4.0-Linux/resources/* ./build/${PROJECT}/lin_x64/resources/
+        cp ./download/build-linux/Ultralight-SDK-1.4.0-Linux/bin/*.so ./build/${PROJECT}/lin_x64/lib/
 
         # Copy Mac Ultralight runtime (universal dylibs)
-        cp ./download/build-mac/build/ultralight-libs/*.dylib ./build/${PROJECT}/mac_x64/
-        cp ./download/build-mac/Ultralight-SDK-1.4.0-Mac-Arm64/resources/* ./build/${PROJECT}/mac_x64/resources/
+        cp ./download/build-mac/build/ultralight-libs/*.dylib ./build/${PROJECT}/mac_x64/lib/
 
         ls -lR ./build/${PROJECT}
 
