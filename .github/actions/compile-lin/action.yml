@@ -14,7 +14,7 @@ runs:
       shell: bash
       run: |
         set -x
-        sudo apt-get -y install libcurl4-openssl-dev libgl-dev libopengl-dev libopengl0
+        sudo apt-get -y install libcurl4-openssl-dev libgl-dev libopengl-dev libopengl0 libx11-dev xorg-dev libglu1-mesa-dev
         TAG=${GITHUB_REF##*/}
         if [ ! -z "$TAG" ]; then
           echo "VERSION=$TAG" > version.mak
@@ -28,3 +28,5 @@ runs:
         name: build-linux
         path: |
           build/lin.xpl
+          Ultralight-SDK-1.4.0-Linux/bin/*.so
+          Ultralight-SDK-1.4.0-Linux/resources/*

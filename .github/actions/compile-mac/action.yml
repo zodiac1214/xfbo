@@ -22,9 +22,23 @@ runs:
         fi
         make -f Makefile.mac64
 
+    - name: Create universal dylibs
+      shell: bash
+      run: |
+        mkdir -p build/ultralight-libs
+        for lib in libAppCore.dylib libUltralight.dylib libUltralightCore.dylib libWebCore.dylib; do
+          lipo -create \
+            Ultralight-SDK-1.4.0-Mac-Arm64/bin/$lib \
+            Ultralight-SDK-1.4.0-Mac-X86/bin/$lib \
+            -output build/ultralight-libs/$lib
+        done
+        ls -la build/ultralight-libs/
+
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v4
       with:
         name: build-mac
         path: |
           build/mac.xpl
+          build/ultralight-libs/*.dylib
+          Ultralight-SDK-1.4.0-Mac-Arm64/resources/*

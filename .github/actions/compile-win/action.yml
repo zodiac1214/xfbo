@@ -1,17 +1,8 @@
 name: Build Windows Plugin
-description: Build Windows plugin, generate whitelist checksums, and push to release/beta/build-test branch.
+description: Build Windows plugin using MSVC
 runs:
   using: composite
   steps:
-    - uses: msys2/setup-msys2@v2
-      with:
-        msystem: MINGW64
-        update: true
-        install: >-
-          mingw-w64-x86_64-gcc
-          make
-          git
-
     - uses: actions/checkout@v3
 
     - name: Get xplib
@@ -19,15 +10,26 @@ runs:
       run: |
         git clone https://github.com/hotbso/xplib.git ../xplib
 
-    - name: Build Windows binaries
-      shell: msys2 {0}
+    - name: Setup MSVC
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+
+    - name: Generate version.mak
+      shell: bash
       run: |
         TAG=${GITHUB_REF##*/}
         if [ ! -z "$TAG" ]; then
           echo "VERSION=$TAG" > version.mak
+        else
+          echo "VERSION=dev" > version.mak
         fi
-        make -f Makefile.mgw64
-        ls -lR ./build
+
+    - name: Build Windows binaries
+      shell: cmd
+      run: |
+        call build-win-msvc.bat
+        dir /s build
 
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v4
@@ -35,3 +37,5 @@ runs:
         name: build-windows
         path: |
           build/win.xpl
+          Ultralight-SDK-1.4.0-Win64/bin/*.dll
+          Ultralight-SDK-1.4.0-Win64/resources/*

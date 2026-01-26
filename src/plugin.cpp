@@ -1,11 +1,11 @@
 
 #include "plugin.h"
-const char *log_msg_prefix = App::instance().getName();
+const char *log_msg_prefix = nullptr;
 
 // =========================== plugin entry points ===============================================
 PLUGIN_API int XPluginStart(char *out_name, char *out_sig, char *out_desc)
 {
-
+    log_msg_prefix = App::instance().getName();
     return App::instance().initialize(out_name, out_sig, out_desc);
 }
 

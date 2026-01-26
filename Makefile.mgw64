@@ -2,6 +2,8 @@ OBJDIR=./build/win
 
 include Makefile.common
 
+INCLUDES+=-IUltralight-SDK-1.4.0-Win64/include
+
 TARGET=build/win.xpl
 
 HEADERS=$(wildcard *.h)
@@ -28,7 +30,10 @@ COMPILE.cpp = $(CXX) $(CXXFLAGS) $(DEPFLAGS) -c
 COMPILE.c = $(CC) $(CFLAGS) $(DEPFLAGS) -c
 
 LDFLAGS=-shared -static-libgcc -static -lpthread
-LIBS=-L$(SDK)/Libraries/Win -lXPLM_64 -lwinhttp -lopengl32 -lz
+LIBS=-L$(SDK)/Libraries/Win -lXPLM_64 -lwinhttp -lopengl32 -lz \
+	-LUltralight-SDK-1.4.0-Win64/bin \
+	-lUltralight -lUltralightCore -lWebCore -lAppCore
+	
 
 $(OBJDIR)/%.o: %.cpp $(DEPDIR)/%.d version.mak | $(DEPDIR)/src $(OBJDIR)/src
 	$(COMPILE.cpp) -o $@  $<

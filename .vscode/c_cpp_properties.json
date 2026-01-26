@@ -4,7 +4,8 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/../xplib"
+                "${workspaceFolder}/../xplib",
+                "${workspaceFolder}/Ultralight-SDK-1.4.0-Mac-Arm64/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

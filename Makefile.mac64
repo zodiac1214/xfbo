@@ -2,6 +2,9 @@ OBJDIR=./build/mac
 
 include Makefile.common
 
+INCLUDES_ARM=$(INCLUDES) -IUltralight-SDK-1.4.0-Mac-Arm64/include
+INCLUDES_X86=$(INCLUDES) -IUltralight-SDK-1.4.0-Mac-X86/include
+
 TARGET=build/mac.xpl
 TARGET_arm=$(OBJDIR)/mac.xpl_arm
 TARGET_x86=$(OBJDIR)/mac.xpl_x86
@@ -35,14 +38,21 @@ else
     AR=llvm-ar
 endif
 
-CFLAGS+=$(DEFINES) $(OPT) -Wall $(INCLUDES) $(DEBUG) \
+CFLAGS+=$(DEFINES) $(OPT) -Wall $(DEBUG) \
     -DAPL=1 -fPIC -fno-stack-protector -fvisibility=hidden
-CXXFLAGS=$(CXXSTD) $(CFLAGS)
+CFLAGS_ARM=$(CFLAGS) $(INCLUDES_ARM)
+CFLAGS_X86=$(CFLAGS) $(INCLUDES_X86)
+
+CXXFLAGS_ARM=$(CXXSTD) $(CFLAGS_ARM)
+CXXFLAGS_X86=$(CXXSTD) $(CFLAGS_X86)
 
 LNFLAGS+=-dynamiclib -shared -rdynamic -fvisibility=hidden -Wl,-exported_symbols_list -Wl,linkscript.mac
 
 # https://pewpewthespells.com/blog/static_and_dynamic_libraries.html
-LIBS= -F $(SDK)/Libraries/Mac -framework XPLM -framework OpenGL -lcurl -lz
+LIBS= -F $(SDK)/Libraries/Mac -framework XPLM -framework OpenGL -framework WebKit -lcurl -lz -lUltralight -lUltralightCore -lAppCore
+LIBS_ARM=$(LIBS) -LUltralight-SDK-1.4.0-Mac-Arm64/bin
+LIBS_X86=$(LIBS) -LUltralight-SDK-1.4.0-Mac-X86/bin
+	
 
 #test:
 #    $(foreach var,$(.VARIABLES),$(info $(var) = $($(var))))
@@ -51,22 +61,22 @@ all: $(TARGET)
     $(shell [ -d $(OBJDIR)/src ] || mkdir -p $(OBJDIR)/src)
 
 $(OBJDIR)/%.o_arm: %.cpp version.mak
-	$(CXXa) $(CXXFLAGS) -o $@ -c $<
+	$(CXXa) $(CXXFLAGS_ARM) -o $@ -c $<
 
 $(OBJDIR)/%.o_x86: %.cpp  version.mak
-	$(CXXx) $(CXXFLAGS) -o $@ -c $<
+	$(CXXx) $(CXXFLAGS_X86) -o $@ -c $<
 
 $(OBJDIR)/%.o_arm: %.c version.mak
-	$(CCa) $(CFLAGS) -o $@ -c $<
+	$(CCa) $(CFLAGS_ARM) -o $@ -c $<
 
 $(OBJDIR)/%.o_x86: %.c  version.mak
-	$(CCx) $(CFLAGS) -o $@ -c $<
+	$(CCx) $(CFLAGS_X86) -o $@ -c $<
 
 $(TARGET_arm): $(OBJECTS_arm)
-	$(CXXa) -o $@ $(OBJECTS_arm) $(LNFLAGS) $(LIBS)
+	$(CXXa) -o $@ $(OBJECTS_arm) $(LNFLAGS) $(LIBS_ARM)
 
 $(TARGET_x86): $(OBJECTS_x86)
-	$(CXXx) -o $@ $(OBJECTS_x86) $(LNFLAGS) $(LIBS)
+	$ $(CXXx) -o $@ $(OBJECTS_x86) $(LNFLAGS) $(LIBS_X86)
 
 $(TARGET): $(TARGET_arm) $(TARGET_x86)
 	lipo -create -output $@ $(TARGET_arm) $(TARGET_x86)

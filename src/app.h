@@ -12,9 +12,13 @@
 #include "XPLMUtilities.h"
 #include "XPLMMenus.h"
 
+#include <Ultralight/Ultralight.h>
+#include <JavaScriptCore/JavaScript.h>
+#include <AppCore/Platform.h>
+
 #include "log_msg.h"
 #include "../version.h"
-
+using namespace ultralight;
 class App
 {
 
