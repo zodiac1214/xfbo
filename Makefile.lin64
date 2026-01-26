@@ -29,7 +29,7 @@ CXXFLAGS=$(CXXSTD) $(CFLAGS)
 COMPILE.cpp = $(CXX) $(CXXFLAGS) $(DEPFLAGS) -c
 COMPILE.c = $(CC) $(CFLAGS) $(DEPFLAGS) -c
 
-LDFLAGS=-shared -rdynamic -nodefaultlibs -undefined_warning
+LDFLAGS=-shared -rdynamic -nodefaultlibs -undefined_warning -Wl,-rpath,@loader_path/lib
 LIBS=-lcurl -lz -lOpenGL \
 	-lUltralight -lUltralightCore -lWebCore -lAppCore \
 	-LUltralight-SDK-1.4.0-Linux/bin

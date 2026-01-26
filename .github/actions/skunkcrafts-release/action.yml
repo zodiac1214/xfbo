@@ -23,6 +23,9 @@ runs:
 
         # Create directory structure
         mkdir -p ./build/${PROJECT}/resources
+        mkdir -p ./build/${PROJECT}/win_x64/lib
+        mkdir -p ./build/${PROJECT}/lin_x64/lib
+        mkdir -p ./build/${PROJECT}/mac_x64/lib
 
         # Copy Resource
         cp ./download/build-windows/Ultralight-SDK-1.4.0-Win64/resources/* ./build/${PROJECT}/resources/

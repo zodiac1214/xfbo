@@ -46,7 +46,7 @@ CFLAGS_X86=$(CFLAGS) $(INCLUDES_X86)
 CXXFLAGS_ARM=$(CXXSTD) $(CFLAGS_ARM)
 CXXFLAGS_X86=$(CXXSTD) $(CFLAGS_X86)
 
-LNFLAGS+=-dynamiclib -shared -rdynamic -fvisibility=hidden -Wl,-exported_symbols_list -Wl,linkscript.mac
+LNFLAGS+=-dynamiclib -shared -rdynamic -fvisibility=hidden -Wl,-exported_symbols_list -Wl,linkscript.mac -Wl,-rpath,@loader_path/lib
 
 # https://pewpewthespells.com/blog/static_and_dynamic_libraries.html
 LIBS= -F $(SDK)/Libraries/Mac -framework XPLM -framework OpenGL -framework WebKit -lcurl -lz -lUltralight -lUltralightCore -lAppCore

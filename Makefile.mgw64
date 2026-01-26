@@ -29,7 +29,7 @@ CXXFLAGS=$(CXXSTD) $(CFLAGS)
 COMPILE.cpp = $(CXX) $(CXXFLAGS) $(DEPFLAGS) -c
 COMPILE.c = $(CC) $(CFLAGS) $(DEPFLAGS) -c
 
-LDFLAGS=-shared -static-libgcc -static -lpthread
+LDFLAGS=-shared -static-libgcc -static -lpthread -Wl,-rpath,@loader_path/lib
 LIBS=-L$(SDK)/Libraries/Win -lXPLM_64 -lwinhttp -lopengl32 -lz \
 	-LUltralight-SDK-1.4.0-Win64/bin \
 	-lUltralight -lUltralightCore -lWebCore -lAppCore
