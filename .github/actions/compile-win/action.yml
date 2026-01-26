@@ -39,3 +39,4 @@ runs:
           build/win.xpl
           Ultralight-SDK-1.4.0-Win64/bin/*.dll
           Ultralight-SDK-1.4.0-Win64/resources/*
+          Ultralight-SDK-1.4.0-Win64/license/*
