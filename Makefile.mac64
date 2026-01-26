@@ -82,7 +82,10 @@ $(TARGET): $(TARGET_arm) $(TARGET_x86)
 	lipo -create -output $@ $(TARGET_arm) $(TARGET_x86)
 	if [ -d "/Volumes/storage/X-Plane 12/Resources/plugins" ]; then \
         mkdir -p "/Volumes/storage/X-Plane 12/Resources/plugins/${PROJECT_NAME}/mac_x64"; \
-        cp -p build/mac.xpl /Volumes/storage/X-Plane\ 12/Resources/plugins/${PROJECT_NAME}/mac_x64/${PROJECT_NAME}.xpl; \
+        mkdir -p "/Volumes/storage/X-Plane 12/Resources/plugins/${PROJECT_NAME}/mac_x64/lib"; \
+        cp -p build/mac/mac.xpl_arm /Volumes/storage/X-Plane\ 12/Resources/plugins/${PROJECT_NAME}/mac_x64/${PROJECT_NAME}.xpl; \
+        cp -p Ultralight-SDK-1.4.0-Mac-Arm64/bin/* /Volumes/storage/X-Plane\ 12/Resources/plugins/${PROJECT_NAME}/mac_x64/lib; \
+        cp -rp Ultralight-SDK-1.4.0-Mac-Arm64/resources /Volumes/storage/X-Plane\ 12/Resources/plugins/${PROJECT_NAME}; \
     fi
 
 $(DEPDIR): ; @mkdir -p $@
