@@ -26,6 +26,7 @@ runs:
         mkdir -p ./build/${PROJECT}/win_x64/lib
         mkdir -p ./build/${PROJECT}/lin_x64/lib
         mkdir -p ./build/${PROJECT}/mac_x64/lib
+        mkdir -p ./build/${PROJECT}/license_ultralight
 
         # Copy Resource
         cp ./download/build-windows/Ultralight-SDK-1.4.0-Win64/resources/* ./build/${PROJECT}/resources/
@@ -43,6 +44,10 @@ runs:
 
         # Copy Mac Ultralight runtime (universal dylibs)
         cp ./download/build-mac/build/ultralight-libs/*.dylib ./build/${PROJECT}/mac_x64/lib/
+
+        # Copy ultralight EULA and LICENSE
+        cp ./download/build-windows/Ultralight-SDK-1.4.0-Win64/license/* ./build/${PROJECT}/license_ultralight
+      
 
         ls -lR ./build/${PROJECT}
 

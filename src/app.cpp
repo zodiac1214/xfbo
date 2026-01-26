@@ -49,7 +49,7 @@ int App::initialize(char *out_name, char *out_sig, char *out_desc)
     config.user_stylesheet = "body { background-color: #202020; color: #E0E0E0; }";
     Platform::instance().set_config(config);
     Platform::instance().set_font_loader(GetPlatformFontLoader());
-    Platform::instance().set_file_system(GetPlatformFileSystem("."));
+    Platform::instance().set_file_system(GetPlatformFileSystem(plugin_dir.c_str()));
     Platform::instance().set_logger(GetDefaultLogger("ultralight.log"));
 
     RefPtr<Renderer> renderer = Renderer::Create();
